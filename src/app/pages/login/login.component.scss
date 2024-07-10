@@ -1,0 +1,47 @@
+@import "./../../../variables";
+
+.container {
+    margin: auto;
+    margin-top: 5rem;
+    margin-top: 20vh;
+    margin-top: 20dvh;
+    padding-left: 0.975rem;
+    padding-right: 0.975rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+form {
+    width: 100%;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-card-header {
+    padding: 16px;
+}
+
+mat-card-title,
+mat-card-content {
+    display: flex;
+    justify-content: center;
+}
+
+.error {
+    padding: 16px;
+    color: white;
+    background-color: $danger;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .close {
+        cursor: pointer;
+    }
+}
+
+.button {
+    display: flex;
+    justify-content: flex-end;
+}
