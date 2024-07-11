@@ -51,7 +51,7 @@ export class LoginComponent {
     }
 
     private handleLoginError(error: any) {
-        if (error.code === "auth/invalid-credential") {
+        if (error.code === "auth/invalid-credential" || error.code === "auth/user-not-found") {
             this.error = "Email ou mots de passe incorrect!"
         } else {
             console.error('++', error)

@@ -16,7 +16,7 @@
                     <mat-form-field>
                         <mat-label>Mots de passe</mat-label>
                         <input [type]="hidePassword() ? 'password' : 'text'" matInput formControlName="password" autocomplete="current-password">
-                        <button mat-icon-button matSuffix (click)="togglePassword($event)"
+                        <button type="button" mat-icon-button matSuffix (click)="togglePassword($event)"
                             [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword()">
                             <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
