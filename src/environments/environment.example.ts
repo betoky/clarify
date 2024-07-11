@@ -7,4 +7,7 @@ export const environment = {
         authDomain: "PROJECT_ID.firebaseapp.com",
         messagingSenderId: "SENDER_ID"
     },
+    emulatorHost: "http://127.0.0.1",
+    firestoreEmulatorPort: 8080,
+    authEmulatorPort: 9099
 };
