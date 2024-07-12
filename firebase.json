@@ -1,17 +1,31 @@
 {
-    "emulators": {
-        "auth": {
-            "port": 9099
-        },
-        "firestore": {
-            "port": 8080
-        },
-        "hosting": {
-            "port": 5000
-        },
-        "ui": {
-            "enabled": true
-        },
-        "singleProjectMode": true
-    }
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  },
+  "hosting": {
+    "public": "dist/clarify/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
 }

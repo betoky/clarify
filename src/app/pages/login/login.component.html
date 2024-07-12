@@ -31,10 +31,11 @@
                 </p>
 
                 <div class="button">
-                    <button type="submit" mat-button>Login</button>
+                    <button type="submit" mat-button>Se connecter</button>
                 </div>
 
             </form>
         </mat-card-content>
     </mat-card>
+    <google-sign-in (click)="onSignInWithGoogle()" />
 </div>
