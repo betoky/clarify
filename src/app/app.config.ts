@@ -1,4 +1,4 @@
-import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -9,25 +9,29 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
 
+const authProvider = () => {
+    const auth = getAuth();
+    if (environment.runningMode === "local" && environment.emulator) {
+        connectAuthEmulator(auth, environment.emulator.host + ':' + environment.emulator.authPort);
+    }
+    return auth;
+}
+
+const firestorePorvider = () => {
+    const db = getFirestore();
+    if (environment.runningMode === "local" && environment.emulator) {
+        connectFirestoreEmulator(db, environment.emulator.host, environment.emulator.firestorePort);
+    }
+    return db;
+}
+
 export const appConfig: ApplicationConfig = {
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(routes),
         provideFirebaseApp(() => initializeApp(environment.firebase)),
-        provideAuth(() => {
-            const auth = getAuth();
-            if (isDevMode()) {
-                connectAuthEmulator(auth, environment.emulatorHost + ':' + environment.authEmulatorPort);
-            }
-            return auth;
-        }),
-        provideFirestore(() => {
-            const db = getFirestore();
-            if (isDevMode()) {
-                connectFirestoreEmulator(db, environment.emulatorHost, environment.firestoreEmulatorPort);
-            }
-            return db;
-        }),
+        provideAuth(() => authProvider()),
+        provideFirestore(() => firestorePorvider()),
         provideAnimationsAsync()
     ]
 };
