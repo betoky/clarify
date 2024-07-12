@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -13,5 +14,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class AppComponent {
     isLoading = this.authService.loadForAuthenticatedUser;
 
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) {
+        if (!environment.production) {
+            console.debug("Clarify is running in " + environment.runningMode + " mode.")
+        }
+    }
 }

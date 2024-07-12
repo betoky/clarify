@@ -1,4 +1,8 @@
-export const environment = {
+import { IEnvironment } from "./environment.interface";
+
+export const environment: IEnvironment = {
+    production: false,
+    runningMode: "local",
     firebase: {
         projectId: "PROJECT_ID",
         appId: "APP_ID",
@@ -7,7 +11,10 @@ export const environment = {
         authDomain: "PROJECT_ID.firebaseapp.com",
         messagingSenderId: "SENDER_ID"
     },
-    emulatorHost: "http://127.0.0.1",
-    firestoreEmulatorPort: 8080,
-    authEmulatorPort: 9099
+    // add only inside of environment.local.ts
+    emulator: {
+        host: "http://127.0.0.1",
+        firestorePort: 8080,
+        authPort: 9099
+    }
 };
