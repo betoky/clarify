@@ -1,0 +1,51 @@
+:host {
+    // gsb: google sign in button
+    --gsb-stroke: #8E918F;
+    --gsb-bg: #131314;
+    --gsb-text: #E3E3E3;
+
+    --gsb-bg-disabled: #8D8D8D;
+    --gsb-stroke-visible: #4286f44d;
+
+    --gsb-fill-red: #EA4335;
+    --gsb-fill-blue: #4285F4;
+    --gsb-fill-yellow: #FBBC05;
+    --gsb-fill-green: #34A853;
+}
+
+button {
+    padding: 11px 12px;
+    background-color: var(--gsb-bg);
+    border: 1px solid var(--gsb-stroke);
+    border-radius: 100px;
+    color: var(--gsb-text);
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+
+    svg {
+        .red { fill: var(--gsb-fill-red); }
+        .blue { fill: var(--gsb-fill-blue); }
+        .yellow { fill: var(--gsb-fill-yellow); }
+        .green { fill: var(--gsb-fill-green); }
+    }
+
+    &:disabled {
+        background-color: var(--gsb-bg-disabled);
+        border-color: var(--gsb-bg-disabled);
+        cursor: not-allowed;
+        svg {
+            .red, .green, .blue, .yellow {
+                fill: var(--gsb-text);
+            }
+        }
+    }
+
+    &:focus-visible {
+        box-shadow: 0 0 0 4px var(--gsb-stroke-visible);
+    }
+}

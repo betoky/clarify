@@ -1,12 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
 import { RouterLink } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../services/auth.service';
+import { GoogleSignInComponent } from '../../components/ui/google-sign-in/google-sign-in.component';
 
 interface LoginFormGroup {
     email: FormControl<string | null>,
@@ -18,10 +20,12 @@ interface LoginFormGroup {
     standalone: true,
     imports: [
         CommonModule,
+        GoogleSignInComponent,
         MatButtonModule,
         MatCardModule,
         MatIconModule,
         MatInputModule,
+        MatSnackBarModule,
         ReactiveFormsModule,
         RouterLink
     ],
@@ -36,6 +40,7 @@ export class LoginComponent {
     error: string | null = null;
     hidePassword = signal(true);
     private authService = inject(AuthService);
+    private snackBar = inject(MatSnackBar)
 
     submit() {
         const { email, password } = this.form.value;
@@ -50,9 +55,18 @@ export class LoginComponent {
         this.hidePassword.set(!this.hidePassword());
     }
 
+    onSignInWithGoogle() {
+        this.authService.loginWithGoogle();
+    }
+
     private handleLoginError(error: any) {
         if (error.code === "auth/invalid-credential" || error.code === "auth/user-not-found") {
             this.error = "Email ou mots de passe incorrect!"
+        } else if (error.code === "auth/network-request-failed") {
+            this.snackBar.open('Problème de connexion!!', 'Fermer', {
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom'
+            })
         } else {
             console.error('++', error)
         }

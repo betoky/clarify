@@ -1,9 +1,10 @@
 <mat-toolbar class="toolbar">
-    <button mat-icon-button>
+    <button class="toggler-menu" mat-icon-button>
         <mat-icon>menu</mat-icon>
     </button>
     <span>Clarify</span>
     <span class="nav-spacer"></span>
+    <span *ngIf="displayname" class="displayname">{{displayname}}</span>
     <button mat-icon-button (click)="logout()">
         <mat-icon>logout</mat-icon>
     </button>

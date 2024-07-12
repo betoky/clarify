@@ -1,6 +1,6 @@
 import { computed, effect, inject, Injectable } from '@angular/core';
-import { Auth, user, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, User } from '@angular/fire/auth';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Auth, User, user, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -8,12 +8,13 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
     private auth = inject(Auth);
-    authenticated = toSignal<User | null>(user(this.auth));
+    private authenticated = toSignal<User | null>(user(this.auth));
     loadForAuthenticatedUser = computed(() => this.authenticated() === undefined);
+    isAuthenticated = computed(() => !!this.authenticated());
+    currentUser = computed(() => this.authenticated()?.providerData);
 
     constructor(private router: Router) {
-        
-        effect(() => {
+        effect(() => {            
             if (this.authenticated() !== undefined) {
                 !this.authenticated()
                     ? this.router.navigate(['/login'])

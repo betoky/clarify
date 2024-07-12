@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -16,12 +16,16 @@ export const appConfig: ApplicationConfig = {
         provideFirebaseApp(() => initializeApp(environment.firebase)),
         provideAuth(() => {
             const auth = getAuth();
-            connectAuthEmulator(auth, environment.emulatorHost + ':' + environment.authEmulatorPort);
+            if (isDevMode()) {
+                connectAuthEmulator(auth, environment.emulatorHost + ':' + environment.authEmulatorPort);
+            }
             return auth;
         }),
         provideFirestore(() => {
             const db = getFirestore();
-            connectFirestoreEmulator(db, environment.emulatorHost, environment.firestoreEmulatorPort);
+            if (isDevMode()) {
+                connectFirestoreEmulator(db, environment.emulatorHost, environment.firestoreEmulatorPort);
+            }
             return db;
         }),
         provideAnimationsAsync()
