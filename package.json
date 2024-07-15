@@ -6,7 +6,8 @@
     "start": "ng serve",
     "local": "ng serve --configuration local",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "emulator": "firebase emulators:start --import=./dir --export-on-exit"
   },
   "private": true,
   "dependencies": {
