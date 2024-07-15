@@ -18,7 +18,7 @@ export class AuthService {
             if (this.authenticated() !== undefined) {
                 !this.authenticated()
                     ? this.router.navigate(['/login'])
-                    : this.router.navigate(['/dashboard'], {replaceUrl: true});
+                    : this.router.navigate(['/'], {replaceUrl: true});
             }
         })
     }

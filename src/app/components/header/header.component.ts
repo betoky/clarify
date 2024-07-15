@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
     styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+    @Output() menu = new EventEmitter<void>();
     private authService = inject(AuthService);
     displayname = this.authService.currentUser()?.at(0)?.displayName;
 

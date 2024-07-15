@@ -1,0 +1,14 @@
+@import "../../../../variables.scss";
+
+.container {
+    height: 100vh;
+    height: var(--container-height);
+}
+mat-nav-list {
+    a.active {
+        background-color: $accent;
+    }
+}
+mat-sidenav-content {
+    padding: 1rem;
+}
