@@ -20,7 +20,7 @@ const authProvider = () => {
 const firestorePorvider = () => {
     const db = getFirestore();
     if (environment.runningMode === "local" && environment.emulator) {
-        connectFirestoreEmulator(db, environment.emulator.host, environment.emulator.firestorePort);
+        connectFirestoreEmulator(db, environment.emulator.host.replace('http://', ''), environment.emulator.firestorePort);
     }
     return db;
 }

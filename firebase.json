@@ -27,5 +27,9 @@
         "destination": "/index.html"
       }
     ]
+  },
+  "firestore": {
+    "rules": "firestore-emulator.rules",
+    "indexes": "firestore.indexes.json"
   }
 }
