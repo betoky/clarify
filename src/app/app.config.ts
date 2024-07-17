@@ -1,5 +1,7 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
@@ -8,6 +10,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
+
+registerLocaleData(localeFr);
 
 const authProvider = () => {
     const auth = getAuth();
@@ -32,6 +36,7 @@ export const appConfig: ApplicationConfig = {
         provideFirebaseApp(() => initializeApp(environment.firebase)),
         provideAuth(() => authProvider()),
         provideFirestore(() => firestorePorvider()),
-        provideAnimationsAsync()
+        provideAnimationsAsync(),
+        { provide: LOCALE_ID, useValue: 'fr-FR' }
     ]
 };

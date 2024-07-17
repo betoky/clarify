@@ -1,1 +1,10 @@
-<p>transactions works!</p>
+<h1>Transactions bancaires</h1>
+
+<section>
+    <h2>Les transactions</h2>
+    <ul>
+        @for (t of transactions(); track t.id) {
+            <li>{{t.date | date:'medium'}} - {{t.amount | currency:'Ariary'}} | {{t.operation | operationTitle}}</li>
+        }
+    </ul>
+</section>
