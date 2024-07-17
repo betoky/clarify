@@ -27,16 +27,22 @@ export interface SalaryTransaction extends BaseTransaction {
     company: string;
 }
 
+export type CreditCardType = 'TPE' | 'VISA';
 export interface CreditCardTransaction extends BaseTransaction {
     operation: 'credit-card';
-    type: 'TPE' | 'VISA'
+    type: CreditCardType;
+    fee?: number;
 }
 
-export type Transaction = DepositTransaction | WithdralTransaction | SalaryTransaction | CreditCardTransaction;
+export interface BankFeeTransaction extends BaseTransaction {
+    operation: 'bank-fee';
+}
+
+export type Transaction = DepositTransaction | WithdralTransaction | SalaryTransaction | CreditCardTransaction | BankFeeTransaction;
 
 export interface Operation {
     name: OperationName;
     title: string;
 }
 
-export type OperationName = 'deposit' | 'withdral' | 'salary' | 'credit-card';
+export type OperationName = 'deposit' | 'withdral' | 'salary' | 'credit-card' | 'bank-fee';

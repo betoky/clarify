@@ -1,12 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { TransactionsService } from './transactions.service';
-import { DepositTransaction, SalaryTransaction, WithdralTransaction, WithdralType } from '../models/transaction';
+import { BankFeeTransaction, CreditCardTransaction, CreditCardType, DepositTransaction, SalaryTransaction, WithdralTransaction, WithdralType } from '../models/transaction';
 
 type NewSalaryTransaction = Omit<SalaryTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
 type NewDepositTransaction = Omit<DepositTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
 type NewWithdralTransaction = Omit<WithdralTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
+type NewCreditCardTransaction = Omit<CreditCardTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
+type NewBankFeeTransaction = Omit<BankFeeTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
 
-type ToSaveTransaction = NewSalaryTransaction | NewDepositTransaction | NewWithdralTransaction;
+type ToSaveTransaction = NewSalaryTransaction | NewDepositTransaction | NewWithdralTransaction | NewCreditCardTransaction | NewBankFeeTransaction;
 
 @Injectable({
     providedIn: 'root'
@@ -33,6 +35,23 @@ export class OperationsService {
             amount, date, type, location, spent: 0, incoming: false, operation: 'withdral'
         }
         return this.saveTransaction(withdralTransaction, note);
+    }
+
+    cardPayment(amount: number, date: Date, type: CreditCardType, fee?: number, note?: string) {
+        const creditCardTransaction: NewCreditCardTransaction = {
+            amount, date, type , incoming: false, operation: 'credit-card'
+        }
+        if (fee) {
+            creditCardTransaction.fee = fee;
+        }
+        return this.saveTransaction(creditCardTransaction, note);
+    }
+
+    recordBankCharge(amount: number, date: Date, note?: string) {
+        const bankFeeTransaction: NewBankFeeTransaction = {
+            amount, date, incoming: false, operation: 'bank-fee'
+        }
+        return this.saveTransaction(bankFeeTransaction, note);
     }
 
     private saveTransaction(data: ToSaveTransaction, note?: string) {
