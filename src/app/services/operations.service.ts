@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { TransactionsService } from './transactions.service';
-import { DepositTransaction, SalaryTransaction } from '../models/transaction';
+import { DepositTransaction, SalaryTransaction, WithdralTransaction, WithdralType } from '../models/transaction';
 
 type NewSalaryTransaction = Omit<SalaryTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
 type NewDepositTransaction = Omit<DepositTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
+type NewWithdralTransaction = Omit<WithdralTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
 
-type ToSaveTransaction = NewSalaryTransaction | NewDepositTransaction;
+type ToSaveTransaction = NewSalaryTransaction | NewDepositTransaction | NewWithdralTransaction;
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +26,13 @@ export class OperationsService {
             amount, date, agency, incoming: true, operation: 'deposit'
         }
         return this.saveTransaction(depositTransaction, note);
+    }
+
+    withdrawMoney(amount: number, date: Date, type: WithdralType, location: string, note?: string) {
+        const withdralTransaction: NewWithdralTransaction = {
+            amount, date, type, location, spent: 0, incoming: false, operation: 'withdral'
+        }
+        return this.saveTransaction(withdralTransaction, note);
     }
 
     private saveTransaction(data: ToSaveTransaction, note?: string) {

@@ -14,11 +14,12 @@ export interface DepositTransaction extends BaseTransaction {
     agency: string;
 }
 
+export type WithdralType = 'gab' | 'check';
 export interface WithdralTransaction extends BaseTransaction {
     operation: 'withdral';
-    type: 'gab' | 'check' | 'transfer';
-    place?: string;
-    spent?: number;
+    type: WithdralType;
+    location: string;
+    spent: number;
 }
 
 export interface SalaryTransaction extends BaseTransaction {
