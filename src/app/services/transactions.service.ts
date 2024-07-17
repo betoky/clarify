@@ -5,6 +5,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { addDoc, collection, collectionData, doc, Firestore, getDoc, getDocs, serverTimestamp, updateDoc } from '@angular/fire/firestore';
 import { Operation, Transaction } from '../models/transaction';
 
+/**
+ * This service is for the handling the transactions themselves 
+*/
 @Injectable({
     providedIn: 'root'
 })

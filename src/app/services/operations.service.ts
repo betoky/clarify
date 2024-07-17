@@ -2,6 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { TransactionsService } from './transactions.service';
 import { BankFeeTransaction, CreditCardTransaction, CreditCardType, DepositTransaction, SalaryTransaction, WithdralTransaction, WithdralType } from '../models/transaction';
 
+/**
+ * TODO: Optimize creation of operations(transactions)
+*/
 type NewSalaryTransaction = Omit<SalaryTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
 type NewDepositTransaction = Omit<DepositTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
 type NewWithdralTransaction = Omit<WithdralTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
@@ -10,6 +13,9 @@ type NewBankFeeTransaction = Omit<BankFeeTransaction, 'id' | 'note' | 'created_a
 
 type ToSaveTransaction = NewSalaryTransaction | NewDepositTransaction | NewWithdralTransaction | NewCreditCardTransaction | NewBankFeeTransaction;
 
+/**
+ * This service is for handling different types of transactions
+*/
 @Injectable({
     providedIn: 'root'
 })
