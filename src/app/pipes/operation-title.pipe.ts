@@ -1,6 +1,6 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
 import { OperationName } from '../models/transaction';
-import { TransactionsService } from '../transactions.service';
+import { TransactionsService } from '../services/transactions.service';
 
 @Pipe({
     name: 'operationTitle',

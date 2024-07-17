@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TransactionsService } from '../../services/transactions.service';
-import { OperationTitlePipe } from '../../services/pipes/operation-title.pipe';
+import { OperationTitlePipe } from '../../pipes/operation-title.pipe';
 
 @Component({
     selector: 'app-transactions',

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { collection, collectionData, Firestore, getDocs } from '@angular/fire/firestore';
-import { Operation, Transaction } from './models/transaction';
+import { Operation, Transaction } from '../models/transaction';
 
 @Injectable({
     providedIn: 'root'
