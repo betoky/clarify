@@ -1,8 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { TransactionsService } from './transactions.service';
-import { SalaryTransaction } from '../models/transaction';
+import { DepositTransaction, SalaryTransaction } from '../models/transaction';
 
-type NewSalaryTransaction = Omit<SalaryTransaction, 'id' | 'created_at' | 'update_at'>;
+type NewSalaryTransaction = Omit<SalaryTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
+type NewDepositTransaction = Omit<DepositTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
+
+type ToSaveTransaction = NewSalaryTransaction | NewDepositTransaction;
 
 @Injectable({
     providedIn: 'root'
@@ -14,9 +17,21 @@ export class OperationsService {
         const salaryTransaction: NewSalaryTransaction = {
             amount, date, company, incoming: true, operation: 'salary'
         }
-        if (note) {
-            salaryTransaction.note = note;
+        return this.saveTransaction(salaryTransaction, note);
+    }
+
+    depositMoney(amount: number, date: Date, agency: string, note?: string) {
+        const depositTransaction: NewDepositTransaction = {
+            amount, date, agency, incoming: true, operation: 'deposit'
         }
-        return this.tranService.addTransaction(salaryTransaction);
+        return this.saveTransaction(depositTransaction, note);
+    }
+
+    private saveTransaction(data: ToSaveTransaction, note?: string) {
+        const transaction: ToSaveTransaction & { note?: string } = { ...data };
+        if (note) {
+            transaction.note = note;
+        }
+        return this.tranService.addTransaction(transaction);
     }
 }

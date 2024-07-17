@@ -2,9 +2,13 @@
 
 <section>
     <h2>Les transactions</h2>
-    <ul>
-        @for (t of transactions(); track t.id) {
-            <li>{{t.date | date:'medium'}} - {{t.amount | currency:'Ariary'}} | {{t.operation | operationTitle}}</li>
-        }
-    </ul>
+    @if (!transactions() || transactions()?.length === 0) {
+        <p>Pas de transactions fait ici.</p>
+    } @else {
+        <ul>
+            @for (t of transactions(); track t.id) {
+                <li>{{t.date | date:'medium'}} - {{t.amount | currency:'Ariary'}} | {{t.operation | operationTitle}}</li>
+            }
+        </ul>
+    }
 </section>
