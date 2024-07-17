@@ -1,9 +1,11 @@
 export interface BaseTransaction {
-    operation: OperationName;
     id: string;
+    operation: OperationName;
+    incoming: boolean;
     amount: number;
     date: Date;
-    incoming: boolean;
+    created_at: Date;
+    update_at: Date | null;
     note?: string;
 }
 
