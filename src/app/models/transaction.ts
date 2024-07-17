@@ -14,7 +14,7 @@ export interface DepositTransaction extends BaseTransaction {
 
 export interface WithdralTransaction extends BaseTransaction {
     operation: 'withdral';
-    type: 'GAB' | 'check' | 'transfer';
+    type: 'gab' | 'check' | 'transfer';
     place?: string;
     spent?: number;
 }
