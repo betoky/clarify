@@ -1,0 +1,33 @@
+<h3>Frais carte bancaire</h3>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+        <mat-label>Banque</mat-label>
+        <input matInput type="text" formControlName="bank">
+        <mat-error>La banque est requise</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Somme</mat-label>
+        <input matInput type="number" formControlName="amount">
+        <mat-error>La somme est requise</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date">
+        <mat-hint>JJ/MM/AAAA</mat-hint>
+        <mat-error>Date est requise</mat-error>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker touchUi #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-checkbox formControlName="remember">Se souvenir d'information sur le frais</mat-checkbox>
+    <button mat-flat-button type="submit">Enregistrer</button>
+</form>
+
+@if (error()) {
+    <br/>
+    <p class="error">
+        Frais non sauvegardé, il y a eu une erreur!!
+        <span (click)="error.set(null)" style="line-height: 0;">
+            <mat-icon class="close">close</mat-icon>
+        </span>
+    </p>
+}

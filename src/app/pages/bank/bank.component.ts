@@ -8,6 +8,8 @@ import { SalaryComponent } from '../../components/transactions/salary/salary.com
 import { DepositComponent } from '../../components/transactions/deposit/deposit.component';
 import { WithdralComponent } from '../../components/transactions/withdral/withdral.component';
 import { BottomSheetComponent } from '../../models/bottom-sheet';
+import { AgiosComponent } from '../../components/transactions/agios/agios.component';
+import { CreditCardComponent } from '../../components/transactions/credit-card/credit-card.component';
 
 @Component({
     selector: 'app-bank',
@@ -37,6 +39,16 @@ export class BankComponent {
         this.listenToCloseBottomSheet(withdralComp);
     }
 
+    openAGIOSComponent() {
+        const agiosComp = this.bottomSheet.open(AgiosComponent);
+        this.listenToCloseBottomSheet(agiosComp);
+    }
+
+    openCreditCardComponent() {
+        const creditCardComp = this.bottomSheet.open(CreditCardComponent);
+        this.listenToCloseBottomSheet(creditCardComp);
+    }
+
     private listenToCloseBottomSheet(component: MatBottomSheetRef<BottomSheetComponent, any>) {
         const sub = component.instance.submitted$.subscribe({
             next: () => {
@@ -45,14 +57,6 @@ export class BankComponent {
             }
         })
     }
-
-    // recordBankCharges() {
-    //     this.operationService.recordBankCharge(27000, new Date(), 'AGIOS 17/07')
-    //     .then(async data => {
-    //         const newDoc = await this.transactionService.getDoc(data.id);
-    //         console.log("++ record successfully", newDoc.data())
-    //     })
-    // }
 
     // cardPayment() {
     //     this.operationService.cardPayment(150000, new Date(), 'TPE', undefined, 'Fête de mère à Extra Pizza')
