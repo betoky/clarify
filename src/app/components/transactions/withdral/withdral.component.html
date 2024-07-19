@@ -1,0 +1,43 @@
+<h3>Retrait d'argent</h3>
+<form [formGroup]="form" (ngSubmit)="withdraw()">
+    <mat-form-field>
+        <mat-label>Type du retrait</mat-label>
+        <mat-select formControlName="type">
+            <mat-option value="gab">GAB</mat-option>
+            <mat-option value="check">Chèque</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Somme</mat-label>
+        <input matInput type="number" formControlName="amount">
+        <mat-error>La somme est requise</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Lieu du retrait</mat-label>
+        <input matInput type="text" formControlName="location">
+        <mat-error>Le lieu est requis</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Date du retrait</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date">
+        <mat-hint>JJ/MM/AAAA</mat-hint>
+        <mat-error>Date du retrait requise</mat-error>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker touchUi #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <mat-label>Note</mat-label>
+        <textarea matInput formControlName="note"></textarea>
+    </mat-form-field>
+    <button mat-flat-button type="submit">Enregistrer</button>
+</form>
+
+@if (error()) {
+<br />
+<p class="error">
+    Dépôt non enregistré, il y a eu une erreur!!
+    <span (click)="error.set(null)" style="line-height: 0;">
+        <mat-icon class="close">close</mat-icon>
+    </span>
+</p>
+}

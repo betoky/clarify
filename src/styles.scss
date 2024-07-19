@@ -1,6 +1,8 @@
 @import "./variables.scss";
 
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
@@ -13,6 +15,7 @@ body {
     font-size: 2.5rem;
     line-height: 1.2;
 }
+
 .mat-typography h3 {
     font-size: 1.8rem;
     line-height: 1.2;
@@ -30,7 +33,26 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     .close {
         cursor: pointer;
+    }
+}
+
+app-withdral,
+app-salary,
+app-deposit {
+    padding: 1rem .75rem 1.5rem;
+    display: block;
+
+    mat-form-field {
+        margin-bottom: 0.5rem;
+        display: block !important;
+    }
+
+    button {
+        margin-left: auto;
+        display: block !important;
+        width: fit-content;
     }
 }

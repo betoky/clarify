@@ -7,8 +7,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
-import { OperationsService } from '../../services/operations.service';
-import { BottomSheetComponent } from '../../models/bottom-sheet';
+import { OperationsService } from '../../../services/operations.service';
+import { BottomSheetComponent } from '../../../models/bottom-sheet';
 
 @Component({
     selector: 'app-salary',

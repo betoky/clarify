@@ -6,8 +6,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { OperationsService } from '../../services/operations.service';
-import { BottomSheetComponent } from '../../models/bottom-sheet';
+import { OperationsService } from '../../../services/operations.service';
+import { BottomSheetComponent } from '../../../models/bottom-sheet';
 
 @Component({
     selector: 'app-deposit',
