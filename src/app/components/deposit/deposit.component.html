@@ -1,0 +1,36 @@
+<h3>Dépôt d'argent</h3>
+<form [formGroup]="form" (ngSubmit)="deposit()">
+    <mat-form-field>
+        <mat-label>Somme</mat-label>
+        <input matInput type="number" formControlName="amount">
+        <mat-error>La somme est requise</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Agence</mat-label>
+        <input matInput type="text" formControlName="agency">
+        <mat-error>Agence est requis</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Date de dépôt</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date">
+        <mat-hint>JJ/MM/AAAA</mat-hint>
+        <mat-error>Date de dépôt requise</mat-error>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker touchUi #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <mat-label>Note</mat-label>
+        <textarea matInput formControlName="note"></textarea>
+    </mat-form-field>
+    <button mat-flat-button type="submit">Enregistrer</button>
+</form>
+
+@if (error()) {
+    <br/>
+    <p class="error">
+        Dépôt non enregistré, il y a eu une erreur!!
+        <span (click)="error.set(null)" style="line-height: 0;">
+            <mat-icon class="close">close</mat-icon>
+        </span>
+    </p>
+}

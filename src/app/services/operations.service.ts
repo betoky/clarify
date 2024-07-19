@@ -1,6 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { TransactionsService } from './transactions.service';
-import { BankFeeTransaction, CreditCardTransaction, CreditCardType, DepositTransaction, SalaryTransaction, WithdralTransaction, WithdralType } from '../models/transaction';
+import { BalanceService } from './balance.service';
+import {
+    BankFeeTransaction,
+    CreditCardTransaction,
+    CreditCardType,
+    DepositTransaction,
+    SalaryTransaction,
+    WithdralTransaction,
+    WithdralType
+} from '../models/transaction';
 
 /**
  * TODO: Optimize creation of operations(transactions)
@@ -21,6 +30,7 @@ type ToSaveTransaction = NewSalaryTransaction | NewDepositTransaction | NewWithd
 })
 export class OperationsService {
     private tranService = inject(TransactionsService);
+    private balanceService = inject(BalanceService);
 
     saveSalary(amount: number, date: Date, company: string, note?: string) {
         const salaryTransaction: NewSalaryTransaction = {
@@ -60,10 +70,16 @@ export class OperationsService {
         return this.saveTransaction(bankFeeTransaction, note);
     }
 
-    private saveTransaction(data: ToSaveTransaction, note?: string) {
+    private async saveTransaction(data: ToSaveTransaction, note?: string) {
         const transaction: ToSaveTransaction & { note?: string } = { ...data };
         if (note) {
             transaction.note = note;
+        }
+        const {amount, incoming} = data;
+        if (incoming) {
+            await this.balanceService.increase(amount);
+        } else {
+            await this.balanceService.decrease(amount);
         }
         return this.tranService.addTransaction(transaction);
     }

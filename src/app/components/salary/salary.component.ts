@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { OperationsService } from '../../services/operations.service';
+import { BottomSheetComponent } from '../../models/bottom-sheet';
 
 @Component({
     selector: 'app-salary',
@@ -16,8 +17,8 @@ import { OperationsService } from '../../services/operations.service';
     templateUrl: './salary.component.html',
     styleUrl: './salary.component.scss'
 })
-export class SalaryComponent implements OnInit {
-    private operationService = inject(OperationsService);    
+export class SalaryComponent implements OnInit, BottomSheetComponent {
+    private operationService = inject(OperationsService);
     private _submitted$ = new Subject<void>();
     submitted$ = this._submitted$.asObservable();
     error = signal<Error|null>(null);
@@ -46,7 +47,7 @@ export class SalaryComponent implements OnInit {
                 localStorage.removeItem('salaryInfo');
             }
             this.operationService.saveSalary(amount!, date!, company!, note ?? undefined)
-            .then(() => this._submitted$.complete())
+            .then(() => this._submitted$.next())
             .catch((error: any) => {
                 this.error.set(error);
                 this._submitted$.error(error);

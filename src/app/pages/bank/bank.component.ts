@@ -2,14 +2,16 @@ import { Component, inject } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatBottomSheet, MatBottomSheetModule, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { BalanceService } from '../../services/balance.service';
 import { SalaryComponent } from '../../components/salary/salary.component';
+import { DepositComponent } from '../../components/deposit/deposit.component';
+import { BottomSheetComponent } from '../../models/bottom-sheet';
 
 @Component({
     selector: 'app-bank',
     standalone: true,
-    imports: [CurrencyPipe, MatBottomSheetModule, MatButtonModule, MatIconModule, SalaryComponent],
+    imports: [CurrencyPipe, MatBottomSheetModule, MatButtonModule, MatIconModule, SalaryComponent, DepositComponent],
     templateUrl: './bank.component.html',
     styleUrl: './bank.component.scss'
 })
@@ -21,24 +23,22 @@ export class BankComponent {
 
     openSalaryComponent() {
         const salaryComp = this.bottomSheet.open(SalaryComponent);
-        const sub = salaryComp.instance.submitted$.subscribe({
-            next: () => {
-                sub.unsubscribe();
-                salaryComp.dismiss();
-            },
-            error: (err) => {
-                console.log('++ openSalaryComponent', err);
-            },
-        })
+        this.listenToCloseBottomSheet(salaryComp);
     }
 
-    // deposit() {
-    //     this.operationService.depositMoney(500000, new Date(), 'SG Antsakaviro', 'Revenue investissement')
-    //     .then(async data => {
-    //         const newDoc = await this.transactionService.getDoc(data.id);
-    //         console.log("++ deposit successfully", newDoc.data())
-    //     })
-    // }
+    openDepositComponent() {
+        const depositComp = this.bottomSheet.open(DepositComponent);
+        this.listenToCloseBottomSheet(depositComp);
+    }
+
+    private listenToCloseBottomSheet(component: MatBottomSheetRef<BottomSheetComponent, any>) {
+        const sub = component.instance.submitted$.subscribe({
+            next: () => {
+                sub.unsubscribe();
+                component.dismiss();
+            }
+        })
+    }
 
     // withdrawMoney() {
     //     this.operationService.withdrawMoney(150000, new Date(), 'gab', 'BOA Andrefana Ambohijanahary')
