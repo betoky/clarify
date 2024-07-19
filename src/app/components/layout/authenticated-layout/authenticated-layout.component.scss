@@ -5,10 +5,18 @@
     height: var(--container-height);
 }
 mat-nav-list {
+    padding: 2rem 1rem;
     a.active {
         background-color: $accent;
+    }
+    a:not(.last-item) {
+        margin-bottom: .75rem;
     }
 }
 mat-sidenav-content {
     padding: 1rem;
+}
+mat-icon {
+    margin-right: 0.3rem;
+    vertical-align: middle;
 }

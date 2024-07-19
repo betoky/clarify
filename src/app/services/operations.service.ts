@@ -22,7 +22,7 @@ type ToSaveTransaction = NewSalaryTransaction | NewDepositTransaction | NewWithd
 export class OperationsService {
     private tranService = inject(TransactionsService);
 
-    setSalary(amount: number, date: Date, company: string, note?: string) {
+    saveSalary(amount: number, date: Date, company: string, note?: string) {
         const salaryTransaction: NewSalaryTransaction = {
             amount, date, company, incoming: true, operation: 'salary'
         }

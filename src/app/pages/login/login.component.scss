@@ -1,5 +1,3 @@
-@import "./../../../variables";
-
 .container {
     margin: auto;
     margin-top: 5rem;
@@ -27,18 +25,6 @@ mat-card-title,
 mat-card-content {
     display: flex;
     justify-content: center;
-}
-
-.error {
-    padding: 16px;
-    color: white;
-    background-color: $danger;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .close {
-        cursor: pointer;
-    }
 }
 
 .button {

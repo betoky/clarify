@@ -9,21 +9,20 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/login/login.component').then(c => c.LoginComponent)
     },
     {
-        path: 'admin',
+        path: '',
         canActivateChild: [authGuard],
-        loadComponent: () => import('./components/layout/dashbord-layout/dashbord-layout.component').then(c => c.DashbordLayoutComponent),
+        loadComponent: () => import('./components/layout/authenticated-layout/authenticated-layout.component').then(c => c.AuthenticatedLayoutComponent),
         children: [
             {
                 path: 'dashboard',
                 loadComponent: () => import('./pages/dashboard/dashboard.component').then(c => c.DashboardComponent)
             },
             {
-                path: 'transactions',
-                loadComponent: () => import('./pages/transactions/transactions.component').then(c => c.TransactionsComponent)
+                path: 'bank',
+                loadComponent: () => import('./pages/bank/bank.component').then(c => c.BankComponent)
             }
         ]
     },
-    { path: '', redirectTo: '/admin', pathMatch: 'full' },
     {
         path: '**',
         loadComponent: () => import('./pages/not-found/not-found.component').then(c => c.NotFoundComponent)
