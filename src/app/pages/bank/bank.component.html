@@ -2,8 +2,12 @@
     <h1>Banque<mat-icon>account_balance</mat-icon></h1>
     <div class="balance"><mat-icon>balance</mat-icon> <span>{{balance() | currency:'MGA'}}</span></div>
 </div>
-<button type="button" mat-button (click)="openSalaryComponent()">Ajouter mon salaire</button>
-<button type="button" mat-button (click)="openDepositComponent()">Faire un dépôt</button>
-<button type="button" mat-button (click)="openWithdralComponent()">Retirer de l'argent</button>
-<button type="button" mat-button (click)="openAGIOSComponent()">AGIOS</button>
-<button type="button" mat-button (click)="openCreditCardComponent()" >Frais carte</button>
+
+<app-transaction-register />
+
+<section>
+    <h3>Dernières transactions</h3>
+    @for (t of lastTransactions(); track t.id) {
+        <app-transaction-item [transaction]="t" />
+    }
+</section>

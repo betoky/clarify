@@ -2,7 +2,10 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { addDoc, collection, collectionData, doc, Firestore, getDoc, getDocs, serverTimestamp, updateDoc } from '@angular/fire/firestore';
+import {
+    addDoc, collection, collectionData, doc, Firestore, getDoc, getDocs,
+    limitToLast, orderBy, query, serverTimestamp, updateDoc
+} from '@angular/fire/firestore';
 import { Operation, Transaction } from '../models/transaction';
 
 /**
@@ -36,12 +39,21 @@ export class TransactionsService {
         }) as Transaction[];
     }
 
-    listenToTransactions(): Observable<Transaction[]> {
-        return collectionData(this.transactionsRef, { idField: 'id' })
+    lastTransactions(limit: number = 5): Observable<Transaction[]> {
+        const last20TransactionQuery = query(this.transactionsRef, orderBy("date"), limitToLast(limit))
+        return collectionData(last20TransactionQuery, { idField: 'id' })
             .pipe(
                 map((data: any) => data.map((doc: any) => {
                     const { date, ...rest } = doc;
                     return { date: date.toDate(), ...rest }
+                })),
+                map((data: Transaction[]) => data.sort((a, b) => {
+                    if (a.date === b.date) {
+                        return 0;
+                    } else if (b.date > a.date) {
+                        return 1
+                    }
+                    return -1
                 }))
             );
     }

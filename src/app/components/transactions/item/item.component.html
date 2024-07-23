@@ -1,0 +1,12 @@
+<div class="transaction-card" [class.entrance]="transaction.incoming">
+    <div class="content">
+        <div class="date">
+            <span class="date-d">{{transaction.date.getDate()}}</span>
+            <span class="date-m">{{transaction.date.getMonth() | month}}</span>
+        </div>
+        <div class="body">
+            <span (click)="watch.emit(transaction.id)" class="operation">{{transaction.operation | operationTitle}}</span>
+        </div>
+        <div class="amount">{{transaction.amount|currency:'Ar'}}</div>
+    </div>
+</div>
