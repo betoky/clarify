@@ -3,10 +3,12 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
-    addDoc, collection, collectionData, doc, Firestore, getDoc, getDocs,
-    limitToLast, orderBy, query, serverTimestamp, updateDoc
+    addDoc, collection, collectionData, count, doc, Firestore, getAggregateFromServer,
+    getDoc, getDocs, limitToLast, orderBy, query, serverTimestamp, sum,
+    updateDoc, where
 } from '@angular/fire/firestore';
-import { Operation, Transaction } from '../models/transaction';
+import { NewTransaction, Operation, OperationName, Transaction, TransactionFire } from '../models/transaction';
+
 
 /**
  * This service is for the handling the transactions themselves 
@@ -30,10 +32,12 @@ export class TransactionsService {
         if (data.empty) return [];
 
         return data.docs.map(doc => {
-            const { date, ...data } = doc.data();
+            const { date, created_at, updated_at, ...data } = doc.data() as Omit<TransactionFire, 'id'>;
             return {
                 id: doc.id,
                 date: date.toDate(),
+                created_at: created_at.toDate(),
+                updated_at: updated_at ? updated_at.toDate() : null,
                 ...data
             }
         }) as Transaction[];
@@ -43,9 +47,14 @@ export class TransactionsService {
         const last20TransactionQuery = query(this.transactionsRef, orderBy("date"), limitToLast(limit))
         return collectionData(last20TransactionQuery, { idField: 'id' })
             .pipe(
-                map((data: any) => data.map((doc: any) => {
-                    const { date, ...rest } = doc;
-                    return { date: date.toDate(), ...rest }
+                map((data: TransactionFire[]) => data.map((doc) => {
+                    const { date, created_at, updated_at, ...rest } = doc;
+                    return {
+                        date: date.toDate(),
+                        created_at: created_at.toDate(),
+                        updated_at: updated_at ? created_at.toDate() : null,
+                        ...rest
+                    }
                 })),
                 map((data: Transaction[]) => data.sort((a, b) => {
                     if (a.date === b.date) {
@@ -58,13 +67,13 @@ export class TransactionsService {
             );
     }
 
-    addTransaction(data: Omit<Transaction, 'id' | 'created_at' | 'update_at'>) {
+    addTransaction(data: NewTransaction<Transaction>) {
         return addDoc(this.transactionsRef, {
             created_at: serverTimestamp(), update_at: null, ...data
         })
     }
 
-    updateTransaction(id: string, data: Partial<Omit<Transaction, 'id' | 'created_at' | 'update_at'>>) {
+    updateTransaction(id: string, data: Partial<NewTransaction<Transaction>>) {
         const ref = doc(this.db, "principal/bank/transactions/" + id);
         return updateDoc(ref, { update_at: serverTimestamp(), ...data });
     }
@@ -72,5 +81,33 @@ export class TransactionsService {
     getDoc(id: string) {
         const ref = doc(this.db, "principal/bank/transactions/" + id);
         return getDoc(ref)
+    }
+
+    async getTransactionByOperation(op: OperationName) {
+        const q = query(this.transactionsRef, where('operation', '==', op));
+        return getAggregateFromServer(q, {
+            total: count(),
+            totalAmount: sum('amount')
+        })
+
+
+        // const data = await getDocs(q)
+
+        // if (data.empty) return [];
+
+        // return data.docs.map(doc => {
+        //     const { date, created_at, update_at, ...data } = doc.data();
+        //     return {
+        //         id: doc.id,
+        //         date: date.toDate(),
+        //         created_at: created_at.toDate(),
+        //         update_at: update_at ? update_at.toDate() : null,
+        //         ...data
+        //     }
+        // }) as Transaction[];
+    }
+    
+    save(t: Omit<Transaction, 'id'>) {
+        return addDoc(this.transactionsRef, t);
     }
 }

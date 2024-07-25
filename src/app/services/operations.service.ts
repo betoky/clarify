@@ -3,24 +3,16 @@ import { TransactionsService } from './transactions.service';
 import { BalanceService } from './balance.service';
 import {
     BankFeeTransaction,
+    BankFeeType,
     CreditCardTransaction,
     CreditCardType,
     DepositTransaction,
+    NewTransaction,
+    NewTransactionType,
     SalaryTransaction,
     WithdralTransaction,
     WithdralType
 } from '../models/transaction';
-
-/**
- * TODO: Optimize creation of operations(transactions)
-*/
-type NewSalaryTransaction = Omit<SalaryTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
-type NewDepositTransaction = Omit<DepositTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
-type NewWithdralTransaction = Omit<WithdralTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
-type NewCreditCardTransaction = Omit<CreditCardTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
-type NewBankFeeTransaction = Omit<BankFeeTransaction, 'id' | 'note' | 'created_at' | 'update_at'>;
-
-type ToSaveTransaction = NewSalaryTransaction | NewDepositTransaction | NewWithdralTransaction | NewCreditCardTransaction | NewBankFeeTransaction;
 
 /**
  * This service is for handling different types of transactions
@@ -32,55 +24,48 @@ export class OperationsService {
     private tranService = inject(TransactionsService);
     private balanceService = inject(BalanceService);
 
-    saveSalary(amount: number, date: Date, company: string, note?: string) {
-        const salaryTransaction: NewSalaryTransaction = {
-            amount, date, company, incoming: true, operation: 'salary'
+    saveSalary(amount: number, date: Date, company: string, note: string|null = null) {
+        const salaryTransaction: NewTransaction<SalaryTransaction> = {
+            amount, date, company, incoming: true, operation: 'salary', note
         }
-        return this.saveTransaction(salaryTransaction, note);
+        return this.saveTransaction(salaryTransaction);
     }
 
-    depositMoney(amount: number, date: Date, agency: string, note?: string) {
-        const depositTransaction: NewDepositTransaction = {
-            amount, date, agency, incoming: true, operation: 'deposit'
+    depositMoney(amount: number, date: Date, agency: string, note: string|null = null) {
+        const depositTransaction: NewTransaction<DepositTransaction> = {
+            amount, date, agency, incoming: true, operation: 'deposit', note
         }
-        return this.saveTransaction(depositTransaction, note);
+        return this.saveTransaction(depositTransaction);
     }
 
-    withdrawMoney(amount: number, date: Date, type: WithdralType, location: string, note?: string) {
-        const withdralTransaction: NewWithdralTransaction = {
-            amount, date, type, location, spent: 0, incoming: false, operation: 'withdral'
+    withdrawMoney(amount: number, date: Date, type: WithdralType, location: string, note: string|null = null) {
+        const withdralTransaction: NewTransaction<WithdralTransaction> = {
+            amount, date, type, location, spent: 0, incoming: false, operation: 'withdral', note
         }
-        return this.saveTransaction(withdralTransaction, note);
+        return this.saveTransaction(withdralTransaction);
     }
 
-    cardPayment(amount: number, date: Date, type: CreditCardType, fee?: number, note?: string) {
-        const creditCardTransaction: NewCreditCardTransaction = {
-            amount, date, type , incoming: false, operation: 'credit-card'
+    cardPayment(amount: number, date: Date, type: CreditCardType, fee: number|null = null, note: string|null = null) {
+        const creditCardTransaction: NewTransaction<CreditCardTransaction> = {
+            amount, date, type , incoming: false, operation: 'credit-card', fee, note
         }
-        if (fee) {
-            creditCardTransaction.fee = fee;
-        }
-        return this.saveTransaction(creditCardTransaction, note);
+        return this.saveTransaction(creditCardTransaction);
     }
 
-    recordBankCharge(amount: number, date: Date, note?: string) {
-        const bankFeeTransaction: NewBankFeeTransaction = {
-            amount, date, incoming: false, operation: 'bank-fee'
+    recordBankCharge(amount: number, date: Date, type: BankFeeType, note: string|null = null) {
+        const bankFeeTransaction: NewTransaction<BankFeeTransaction> = {
+            amount, date, incoming: false, operation: 'bank-fee', type, note
         }
-        return this.saveTransaction(bankFeeTransaction, note);
+        return this.saveTransaction(bankFeeTransaction);
     }
 
-    private async saveTransaction(data: ToSaveTransaction, note?: string) {
-        const transaction: ToSaveTransaction & { note?: string } = { ...data };
-        if (note) {
-            transaction.note = note;
-        }
+    private async saveTransaction(data: NewTransactionType) {
         const {amount, incoming} = data;
         if (incoming) {
             await this.balanceService.increase(amount);
         } else {
             await this.balanceService.decrease(amount);
         }
-        return this.tranService.addTransaction(transaction);
+        return this.tranService.addTransaction(data);
     }
 }

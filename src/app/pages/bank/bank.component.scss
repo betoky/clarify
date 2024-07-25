@@ -1,3 +1,5 @@
+@import "./../../../scss/breakpoint.scss";
+
 .title {
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -7,9 +9,11 @@
     flex-wrap: wrap;
     gap: 1rem;
 }
+
 h1 {
     margin-bottom: 0;
     line-height: 1;
+
     mat-icon {
         margin-left: 0.75rem;
         font-size: 3rem;
@@ -18,6 +22,7 @@ h1 {
         vertical-align: bottom;
     }
 }
+
 .balance {
     margin-bottom: 0;
     font-family: "Roboto Condensed", sans-serif;
@@ -25,6 +30,7 @@ h1 {
     font-style: normal;
     font-size: 1.8rem;
     font-weight: 500;
+
     mat-icon {
         margin-right: 0.6rem;
         font-size: 1.2em;
@@ -32,4 +38,40 @@ h1 {
         width: auto;
         height: auto;
     }
+}
+
+.wrapper {
+    $space: 2rem;
+    .list {
+        margin-top: $space;
+    }
+    .aside {
+        margin-top: 1rem;
+        padding: $space;
+        background-color: #151f23;
+        border-radius: 0.975rem;
+        &-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+    }
+    @include media-breakpoint-up(lg) {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 1.5rem;
+        .aside {
+            margin-top: 0;
+            order: 1;
+        }
+    }
+    @include media-breakpoint-up(xl) {
+        gap: 2rem;
+    }
+    @include media-breakpoint-up(xxl) {
+        gap: 3.5rem;
+    }
+}
+.range-filter {
+    font-size: 1rem;
 }

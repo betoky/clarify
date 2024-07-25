@@ -1,8 +1,15 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MatIconModule } from '@angular/material/icon';
+
+import { environment } from '../../../environments/environment';
+import { DummyService } from '../../services/dummy.service';
+
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { BalanceService } from '../../services/balance.service';
 import { TransactionsService } from '../../services/transactions.service';
 import { OperationTitlePipe } from '../../pipes/operation-title.pipe';
@@ -15,8 +22,11 @@ import { TransactionItemComponent } from '../../components/transactions/item/ite
     imports: [
         CurrencyPipe,
         MatButtonModule,
+        MatDatepickerModule,
+        MatFormFieldModule,
         MatIconModule,
         OperationTitlePipe,
+        ReactiveFormsModule,
         TransactionItemComponent,
         TransactionRegisterComponent
     ],
@@ -26,13 +36,35 @@ import { TransactionItemComponent } from '../../components/transactions/item/ite
 export class BankComponent implements OnInit, OnDestroy {
     private balanceService = inject(BalanceService);
     private transactionService = inject(TransactionsService);
+    private dummyService = inject(DummyService);
+
+    readonly isLocalMode = environment.runningMode === 'local';
 
     balance = this.balanceService.balance;
-    lastTransactions = toSignal(this.transactionService.lastTransactions())
+    lastTransactions = toSignal(this.transactionService.lastTransactions());
 
-    constructor() {}
+    readonly range = new FormGroup({
+        start: new FormControl<Date>(new Date()),
+        end: new FormControl<Date >(new Date()),
+    });
 
-    ngOnInit(): void {}
+    constructor() { }
 
-    ngOnDestroy(): void {}
+    ngOnInit(): void {
+        this.transactionService.getTransactionByOperation('withdral')
+        .then(data => console.log(data.data()))
+    }
+
+    ngOnDestroy(): void { }
+
+    onFilter() {
+        console.log('++ Range', this.range.value);
+    }
+    generateFakeTransactions() {
+        this.dummyService.generateTransactions(50).then(data => {
+            data.forEach(doc => {
+                console.log("++ Transaction generated", doc.id);
+            })
+        })
+    }
 }

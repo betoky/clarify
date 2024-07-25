@@ -1,3 +1,19 @@
+import { Timestamp } from "@angular/fire/firestore";
+
+export type OperationName = 'deposit' | 'withdral' | 'salary' | 'credit-card' | 'bank-fee';
+
+export type NewTransaction<T extends BaseTransaction> = Omit<T, 'id' | 'created_at' | 'updated_at'>;
+
+export type Transaction = DepositTransaction | WithdralTransaction | SalaryTransaction | CreditCardTransaction | BankFeeTransaction;
+
+export type NewTransactionType = NewTransaction<Transaction>;
+
+export type TransactionFire = Omit<Transaction, 'date' | 'created_at' | 'updated_at'> & {
+    date: Timestamp,
+    created_at: Timestamp,
+    updated_at: Timestamp | null
+}
+
 export interface BaseTransaction {
     id: string;
     operation: OperationName;
@@ -5,8 +21,8 @@ export interface BaseTransaction {
     amount: number;
     date: Date;
     created_at: Date;
-    update_at: Date | null;
-    note?: string;
+    updated_at: Date | null;
+    note: string | null;
 }
 
 export interface DepositTransaction extends BaseTransaction {
@@ -31,18 +47,16 @@ export type CreditCardType = 'TPE' | 'VISA';
 export interface CreditCardTransaction extends BaseTransaction {
     operation: 'credit-card';
     type: CreditCardType;
-    fee?: number;
+    fee: number | null;
 }
 
+export type BankFeeType = 'AGIOS' | 'CARD';
 export interface BankFeeTransaction extends BaseTransaction {
+    type: BankFeeType;
     operation: 'bank-fee';
 }
-
-export type Transaction = DepositTransaction | WithdralTransaction | SalaryTransaction | CreditCardTransaction | BankFeeTransaction;
 
 export interface Operation {
     name: OperationName;
     title: string;
 }
-
-export type OperationName = 'deposit' | 'withdral' | 'salary' | 'credit-card' | 'bank-fee';
