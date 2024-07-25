@@ -29,7 +29,7 @@ export class CreditCardComponent {
     })
 
     ngOnInit(): void {
-        const savedInfo = localStorage.getItem('credit-card');
+        const savedInfo = localStorage.getItem('cf');
         if (savedInfo) {
             const salaryInfo = JSON.parse(savedInfo);
             this.form.patchValue(salaryInfo);
@@ -40,12 +40,12 @@ export class CreditCardComponent {
         if (this.form.valid) {
             const {amount, bank, date, remember} = this.form.value;
             if (remember) {
-                localStorage.setItem('credit-card', JSON.stringify({amount, bank, remember}));
+                localStorage.setItem('cf', JSON.stringify({amount, bank, remember}));
             } else {
-                localStorage.removeItem('credit-card');
+                localStorage.removeItem('cf');
             }
             const note = `Charge carte banque ${bank} ${date!.getDate()}/${date!.getMonth() + 1}/${date!.getFullYear()}`;
-            this.operationService.recordBankCharge(amount!, date!, note)
+            this.operationService.recordBankCharge(amount!, date!, 'CARD', note)
             .then(() => this._submitted$.next())
             .catch((error: any) => {
                 this.error.set(error);

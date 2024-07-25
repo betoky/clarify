@@ -31,7 +31,7 @@ export class SalaryComponent implements OnInit, BottomSheetComponent {
     })
 
     ngOnInit(): void {
-        const savedInfo = localStorage.getItem('salaryInfo');
+        const savedInfo = localStorage.getItem('sli');
         if (savedInfo) {
             const salaryInfo = JSON.parse(savedInfo);
             this.form.patchValue(salaryInfo);
@@ -42,9 +42,9 @@ export class SalaryComponent implements OnInit, BottomSheetComponent {
         if (this.form.valid) {
             const {amount, company, date, note, remember} = this.form.value;
             if (remember) {
-                localStorage.setItem('salaryInfo', JSON.stringify({amount, company, remember}));
+                localStorage.setItem('sli', JSON.stringify({amount, company, remember}));
             } else {
-                localStorage.removeItem('salaryInfo');
+                localStorage.removeItem('sli');
             }
             this.operationService.saveSalary(amount!, date!, company!, note ?? undefined)
             .then(() => this._submitted$.next())

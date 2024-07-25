@@ -29,7 +29,7 @@ export class AgiosComponent implements OnInit, BottomSheetComponent {
     })
 
     ngOnInit(): void {
-        const savedInfo = localStorage.getItem('agios');
+        const savedInfo = localStorage.getItem('ag');
         if (savedInfo) {
             const salaryInfo = JSON.parse(savedInfo);
             this.form.patchValue(salaryInfo);
@@ -40,12 +40,12 @@ export class AgiosComponent implements OnInit, BottomSheetComponent {
         if (this.form.valid) {
             const {amount, bank, date, remember} = this.form.value;
             if (remember) {
-                localStorage.setItem('agios', JSON.stringify({amount, bank, remember}));
+                localStorage.setItem('ag', JSON.stringify({amount, bank, remember}));
             } else {
-                localStorage.removeItem('agios');
+                localStorage.removeItem('ag');
             }
             const note = `AGIOS ${bank} ${date!.getDate()}/${date!.getMonth() + 1}/${date!.getFullYear()}`;
-            this.operationService.recordBankCharge(amount!, date!, note)
+            this.operationService.recordBankCharge(amount!, date!, 'AGIOS', note)
             .then(() => this._submitted$.next())
             .catch((error: any) => {
                 this.error.set(error);
