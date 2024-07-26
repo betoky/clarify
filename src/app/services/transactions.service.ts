@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
     addDoc, collection, collectionData, count, doc, Firestore, getAggregateFromServer,
@@ -20,11 +20,9 @@ export class TransactionsService {
     private db = inject(Firestore);
     private transactionsRef = collection(this.db, "principal/bank/transactions");
     private transactionNameRef = collection(this.db, "principal/bank/transaction-name");
+    private operations$ = collectionData(this.transactionNameRef, { idField: 'name' }) as Observable<Operation[]>;
 
-    operations = toSignal(
-        collectionData(this.transactionNameRef, { idField: 'name' }) as Observable<Operation[]>,
-        { initialValue: [] }
-    );
+    operations = toSignal(this.operations$.pipe(catchError(e => of(undefined))), { initialValue: undefined });
 
     async getTransactions() {
         const data = await getDocs(this.transactionsRef);
@@ -43,28 +41,30 @@ export class TransactionsService {
         }) as Transaction[];
     }
 
-    lastTransactions(limit: number = 5): Observable<Transaction[]> {
-        const last20TransactionQuery = query(this.transactionsRef, orderBy("date"), limitToLast(limit))
-        return collectionData(last20TransactionQuery, { idField: 'id' })
-            .pipe(
-                map((data: TransactionFire[]) => data.map((doc) => {
-                    const { date, created_at, updated_at, ...rest } = doc;
-                    return {
-                        date: date.toDate(),
-                        created_at: created_at.toDate(),
-                        updated_at: updated_at ? created_at.toDate() : null,
-                        ...rest
-                    }
-                })),
-                map((data: Transaction[]) => data.sort((a, b) => {
-                    if (a.date === b.date) {
-                        return 0;
-                    } else if (b.date > a.date) {
-                        return 1
-                    }
-                    return -1
-                }))
-            );
+    lastTransactions(limit: number = 5) {
+        const last20TransactionQuery = query(this.transactionsRef, orderBy("date"), limitToLast(limit));
+        const transactions$ = collectionData(last20TransactionQuery, { idField: 'id' }) as Observable<TransactionFire[]>;
+
+        return transactions$.pipe(
+            map((data) => data.map(doc => {
+                const { date, created_at, updated_at, ...rest } = doc;
+                return {
+                    date: date.toDate(),
+                    created_at: created_at.toDate(),
+                    updated_at: updated_at ? created_at.toDate() : null,
+                    ...rest
+                } as Transaction;;
+            })),
+            map((data) => data.sort((a, b) => {
+                if (a.date === b.date) {
+                    return 0;
+                } else if (b.date > a.date) {
+                    return 1
+                }
+                return -1
+            })),
+            catchError(() => of(null))
+        );
     }
 
     addTransaction(data: NewTransaction<Transaction>) {
@@ -106,7 +106,7 @@ export class TransactionsService {
         //     }
         // }) as Transaction[];
     }
-    
+
     save(t: Omit<Transaction, 'id'>) {
         return addDoc(this.transactionsRef, t);
     }

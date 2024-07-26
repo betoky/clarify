@@ -1,9 +1,19 @@
 import { inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
+import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
-export const loggedInGuard: CanActivateFn = () => {
-    const authService = inject(AuthService);
+export const loggedInGuard = () => {
+    const router = inject(Router);
+    return inject(AuthService).isLoggedIn$.pipe(
+        map(isLoggedIn => {
+            if (isLoggedIn) {
+                // Redirect to home if logged in
+                router.navigate(['/'], { replaceUrl: true });
+                return false;
+            }
 
-    return !authService.isAuthenticated();
+            return true;
+        })
+    )
 };

@@ -10,7 +10,7 @@ export class OperationTitlePipe implements PipeTransform {
     private transactionService = inject(TransactionsService);
 
     transform(name: OperationName): string {
-        return this.transactionService.operations().find(operation => operation.name === name)?.title ?? name;
+        return this.transactionService.operations()?.find(operation => operation.name === name)?.title ?? name;
     }
 
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,9 +16,10 @@ import { AuthService } from '../../services/auth.service';
 export class HeaderComponent {
     @Output() menu = new EventEmitter<void>();
     private authService = inject(AuthService);
+    private router = inject(Router);
     displayname = this.authService.currentUser()?.at(0)?.displayName;
 
     logout() {
-        this.authService.logout();
+        this.authService.logout().then(() => this.router.navigate(['/login'], { replaceUrl: true }));
     }
 }

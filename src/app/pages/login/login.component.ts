@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
@@ -33,19 +33,23 @@ interface LoginFormGroup {
     styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+    private authService = inject(AuthService);
+    private snackBar = inject(MatSnackBar);
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
+
     form: FormGroup<LoginFormGroup> = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.email]),
         password: new FormControl('', [Validators.required]),
     });
     error: string | null = null;
     hidePassword = signal(true);
-    private authService = inject(AuthService);
-    private snackBar = inject(MatSnackBar)
 
     submit() {
         const { email, password } = this.form.value;
         if (this.form.valid && email && password) {
             this.authService.loginWithEmail(email, password)
+                .then(() => this.onLoggedIn())
                 .catch(error => this.handleLoginError(error))
         }
     }
@@ -56,7 +60,17 @@ export class LoginComponent {
     }
 
     onSignInWithGoogle() {
-        this.authService.loginWithGoogle();
+        this.authService.loginWithGoogle()
+            .then(() => this.onLoggedIn());
+    }
+
+    private onLoggedIn() {
+        const requestedPath = this.route.snapshot.queryParamMap.get('q');
+        if (requestedPath) {
+            this.router.navigateByUrl(requestedPath, { replaceUrl: true });
+        } else {
+            this.router.navigate(['/'], { replaceUrl: true });
+        }
     }
 
     private handleLoginError(error: any) {

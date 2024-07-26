@@ -1,6 +1,8 @@
 <div class="title">
     <h1>Banque<mat-icon>account_balance</mat-icon></h1>
-    <div class="balance"><mat-icon>balance</mat-icon> <span>{{balance() | currency:'MGA'}}</span></div>
+    @if (balance()) {
+        <div class="balance"><mat-icon>balance</mat-icon> <span>{{balance() | currency:'MGA'}}</span></div>
+    }
 </div>
 
 <app-transaction-register />

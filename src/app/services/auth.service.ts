@@ -1,27 +1,17 @@
-import { computed, effect, inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Auth, User, user, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut } from '@angular/fire/auth';
-import { Router } from '@angular/router';
+import { filter, map, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
     private auth = inject(Auth);
-    private authenticated = toSignal<User | null>(user(this.auth));
-    loadForAuthenticatedUser = computed(() => this.authenticated() === undefined);
-    isAuthenticated = computed(() => !!this.authenticated());
-    currentUser = computed(() => this.authenticated()?.providerData);
+    private authenticated$: Observable<User | null | undefined> = user(this.auth);
 
-    constructor(private router: Router) {
-        effect(() => {            
-            if (this.authenticated() !== undefined) {
-                !this.authenticated()
-                    ? this.router.navigate(['/login'])
-                    : this.router.navigate(['/'], {replaceUrl: true});
-            }
-        })
-    }
+    isLoggedIn$ = this.authenticated$.pipe(filter(user => user !== undefined), map(user => user !== null));
+    currentUser = toSignal(this.authenticated$.pipe(map(user => user ? user.providerData : null)), { initialValue: null });
 
     loginWithEmail(email: string, password: string) {
         return signInWithEmailAndPassword(this.auth, email, password);
