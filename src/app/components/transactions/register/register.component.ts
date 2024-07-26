@@ -56,7 +56,7 @@ export class TransactionRegisterComponent {
     // cardPayment() {
     //     this.operationService.cardPayment(150000, new Date(), 'TPE', undefined, 'Fête de mère à Extra Pizza')
     //     .then(async data => {
-    //         const newDoc = await this.transactionService.getDoc(data.id);
+    //         const newDoc = await this.transactionService.getTransactionById(data.id);
     //         console.log("++ card payment successfully", newDoc.data())
     //     })
     // }

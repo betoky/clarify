@@ -8,6 +8,7 @@
 <app-transaction-register />
 
 <section class="wrapper">
+    <!-- Stats -->
     <div class="aside">
         <div class="aside-header">
             <h3>Statistiques</h3>
@@ -25,17 +26,30 @@
             </div>
         </div>
     </div>
+
+    <!-- List -->
     <div class="list">
-        <h3>Dernières transactions</h3>
-        @if (!lastTransactions() || lastTransactions()!.length === 0) {
-            <p>Pas de transactions pour l'instant</p>
-            @if (isLocalMode) {
-                <button mat-stroked-button (click)="generateFakeTransactions()">Generer des transactions</button>
-            }
-        } @else {
-            @for (t of lastTransactions(); track t.id) {
-                <app-transaction-item [transaction]="t" />
+        <!-- Last transactions -->
+        @if (listMode === 'last') {
+            <h3>Dernières transactions</h3>
+            @if (lastTransactions()?.length === 0) {
+                <p>Pas de transactions pour l'instant</p>
+                @if (isLocalMode) {
+                    <button mat-stroked-button (click)="generateFakeTransactions()">Generer des transactions</button>
+                }
+            } @else {
+                @for (t of lastTransactions(); track t.id) {
+                    <app-transaction-item [transaction]="t" />
+                }
             }
         }
+        @if (listMode === 'all') {
+            <h3>Toutes les transactions</h3>
+            <app-transaction-list />
+        }
+        
+        <button mat-stroked-button class="more" (click)="toggleListMode()">
+            {{listMode === 'last' ? "Voir toutes les transactions" : "Voir les dernières transactions"}}
+        </button>
     </div>
 </section>

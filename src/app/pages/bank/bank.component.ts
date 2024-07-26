@@ -10,11 +10,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+
 import { BalanceService } from '../../services/balance.service';
-import { TransactionsService } from '../../services/transactions.service';
 import { OperationTitlePipe } from '../../pipes/operation-title.pipe';
+import { TransactionsService } from '../../services/transactions.service';
 import { TransactionRegisterComponent } from '../../components/transactions/register/register.component';
 import { TransactionItemComponent } from '../../components/transactions/item/item.component';
+import { Transaction } from '../../models/transaction';
+import { TransactionListComponent } from '../../components/transactions/list/list.component';
 
 @Component({
     selector: 'app-bank',
@@ -28,19 +31,20 @@ import { TransactionItemComponent } from '../../components/transactions/item/ite
         OperationTitlePipe,
         ReactiveFormsModule,
         TransactionItemComponent,
+        TransactionListComponent,
         TransactionRegisterComponent
     ],
     templateUrl: './bank.component.html',
     styleUrl: './bank.component.scss'
 })
-export class BankComponent implements OnInit, OnDestroy {
+export class BankComponent implements OnInit {
     private balanceService = inject(BalanceService);
     private transactionService = inject(TransactionsService);
     private dummyService = inject(DummyService);
 
     readonly isLocalMode = environment.runningMode === 'local';
-
     balance = this.balanceService.balance;
+    listMode: 'last' | 'all' = 'last';
     lastTransactions = toSignal(this.transactionService.lastTransactions());
 
     readonly range = new FormGroup({
@@ -48,17 +52,16 @@ export class BankComponent implements OnInit, OnDestroy {
         end: new FormControl<Date >(new Date()),
     });
 
-    constructor() { }
-
     ngOnInit(): void {
         this.transactionService.getTransactionByOperation('withdral')
-        .then(data => console.log(data.data()))
+        // .then(data => console.log(data.data()))
     }
 
-    ngOnDestroy(): void { }
-
     onFilter() {
-        console.log('++ Range', this.range.value);
+        // console.log('++ Range', this.range.value);
+    }
+    toggleListMode() {
+        this.listMode = this.listMode === 'last' ? 'all' : 'last';
     }
     generateFakeTransactions() {
         this.dummyService.generateTransactions(50).then(data => {
