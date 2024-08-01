@@ -16,6 +16,7 @@ export interface IEnvironment {
         host: string;
         firestorePort: number;
         authPort: number;
+        functionPort: number;
     },
     // only for environment.local.ts file
     fakeDataEngine?: {

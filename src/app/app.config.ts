@@ -7,6 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
 import { connectFirestoreEmulator, getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { connectFunctionsEmulator, getFunctions, provideFunctions } from "@angular/fire/functions";
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
@@ -29,6 +30,14 @@ const firestorePorvider = () => {
     return db;
 }
 
+const functionProvider = () => {
+    const functions = getFunctions();
+    if (environment.runningMode === "local" && environment.emulator) {
+        connectFunctionsEmulator(functions, environment.emulator.host.replace('http://', ''), environment.emulator.functionPort);
+    }
+    return functions;
+}
+
 export const appConfig: ApplicationConfig = {
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
@@ -36,6 +45,7 @@ export const appConfig: ApplicationConfig = {
         provideFirebaseApp(() => initializeApp(environment.firebase)),
         provideAuth(() => authProvider()),
         provideFirestore(() => firestorePorvider()),
+        provideFunctions(() => functionProvider()),
         provideAnimationsAsync(),
         provideNativeDateAdapter(),
         { provide: LOCALE_ID, useValue: 'fr-FR' }

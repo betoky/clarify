@@ -15,7 +15,8 @@ export const environment: IEnvironment = {
     emulator: {
         host: "http://127.0.0.1",
         firestorePort: 8080,
-        authPort: 9099
+        authPort: 9099,
+        functionPort: 5001
     },
     fakeDataEngine: {
         transactions: {
