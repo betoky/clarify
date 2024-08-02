@@ -30,7 +30,7 @@
     <!-- List -->
     <div class="list">
         <!-- Last transactions -->
-        @if (listMode === 'last') {
+        @if (lastTransactionMode) {
             <h3>Dernières transactions</h3>
             @if (lastTransactions()?.length === 0) {
                 <p>Pas de transactions pour l'instant</p>
@@ -41,15 +41,15 @@
                 @for (t of lastTransactions(); track t.id) {
                     <app-transaction-item [transaction]="t" />
                 }
+                <button mat-stroked-button class="more" (click)="showMoreList()">
+                    Voir toutes les transactions
+                </button>
+            }
+        } @else {
+            <h3>Toutes les transactions</h3>
+            @for (t of listTransactions(); track t.id) {
+                <app-transaction-item [transaction]="t" />
             }
         }
-        @if (listMode === 'all') {
-            <h3>Toutes les transactions</h3>
-            <app-transaction-list />
-        }
-        
-        <button mat-stroked-button class="more" (click)="toggleListMode()">
-            {{listMode === 'last' ? "Voir toutes les transactions" : "Voir les dernières transactions"}}
-        </button>
     </div>
 </section>
