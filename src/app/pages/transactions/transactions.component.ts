@@ -13,5 +13,5 @@ import { OperationTitlePipe } from '../../pipes/operation-title.pipe';
 })
 export class TransactionsComponent {
     private transactionService =  inject(TransactionsService);
-    transactions = toSignal(this.transactionService.listenToTransactions());
+    transactions = toSignal(this.transactionService.lastTransactions());
 }

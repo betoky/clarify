@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Functions, httpsCallable } from '@angular/fire/functions';
+import { TransactionFire } from '../models/transaction';
 
 @Injectable({
     providedIn: 'root'
@@ -7,7 +8,7 @@ import { Functions, httpsCallable } from '@angular/fire/functions';
 export class FunctionsService {
     private functions = inject(Functions);
 
-    sayHello = (name: string) => {
-        return httpsCallable<string, void>(this.functions, 'sayHello')(name);
+    getFullStatsOfYear = (year: number) => {
+        return httpsCallable<number, TransactionFire[]>(this.functions, 'fullStatsOfYear')(year);
     }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FunctionsService } from '../../services/functions.service';
 
 @Component({
@@ -8,13 +8,14 @@ import { FunctionsService } from '../../services/functions.service';
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
     private functionsService = inject(FunctionsService);
 
-    constructor() {
-        this.functionsService.sayHello('Toky')
-        .then(() => {
-            console.log('++ Terminé');
-        })
+    constructor() {}
+
+    ngOnInit(): void {
+        this.functionsService.getFullStatsOfYear(2016)
+        .then(({data}) => console.log('++ stats 2016', data))
+        .catch(e => console.log('++ e 2016', e))
     }
 }
